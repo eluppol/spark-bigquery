@@ -74,7 +74,7 @@ class BigQueryClient(sqlContext: SQLContext, var bigquery: Bigquery = null) exte
   private def projectId = hadoopConfiguration.get(BigQueryConfiguration.PROJECT_ID_KEY)
   private def inConsole = Thread.currentThread().getStackTrace.exists(
     _.getClassName.startsWith("scala.tools.nsc.interpreter."))
-  private val PRIORITY = if (inConsole) "INTERACTIVE" else "BATCH"
+  private val PRIORITY = "INTERACTIVE"
   private val TABLE_ID_PREFIX = "spark_bigquery"
   private val JOB_ID_PREFIX = "spark_bigquery"
 
