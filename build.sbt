@@ -34,7 +34,7 @@ crossScalaVersions := {
 spName := "samelamin/spark-bigquery"
 sparkVersion := "2.4.0"
 sparkComponents := Seq("core", "sql","streaming")
-spAppendScalaVersion := false
+spAppendScalaVersion := true
 spIncludeMaven := true
 spIgnoreProvided := true
 credentials += Credentials(Path.userHome / ".ivy2" / ".sbtcredentials")
@@ -51,7 +51,7 @@ libraryDependencies ++= Seq(
 )
 
 assemblyShadeRules in assembly := Seq(
-  ShadeRule.rename("com.google.**" -> "shade.com.google.@1").inAll
+  ShadeRule.rename("com.google.common.**" -> "shade.com.google.common.@1").inAll
 )
 
 // Release settings
