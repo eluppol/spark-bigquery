@@ -92,13 +92,18 @@ import org.slf4j.LoggerFactory
       hadoopConf,
       classOf[AvroBigQueryInputFormat],
       classOf[LongWritable],
-      classOf[GenericData.Record]).map(x=>x._2)
-    val schemaString = tableData.map(_.getSchema.toString).first()
-    val schema = new Schema.Parser().parse(schemaString)
-    val structType = SchemaConverters.avroToSqlType(schema).dataType.asInstanceOf[StructType]
-    val converter = SchemaConverters.createConverterToSQL(schema)
-      .asInstanceOf[GenericData.Record => Row]
-    sqlContext.createDataFrame(tableData.map(converter), structType)
+      classOf[GenericData.Record]).map(x => x._2)
+    val schemaArr = tableData.map(_.getSchema.toString).take(1);
+    if (schemaArr.nonEmpty) {
+      val schemaString = schemaArr(0)
+      val schema = new Schema.Parser().parse(schemaString)
+      val structType = SchemaConverters.avroToSqlType(schema).dataType.asInstanceOf[StructType]
+      val converter = SchemaConverters.createConverterToSQL(schema)
+        .asInstanceOf[GenericData.Record => Row]
+      sqlContext.createDataFrame(tableData.map(converter), structType)
+    } else {
+      sqlContext.emptyDataFrame
+    }
   }
 
   def runDMLQuery(runDMLQuery:String):Unit = {
